@@ -50,6 +50,7 @@ app.use(Passport.session()) // Use Passport's session support
 // Endpoints for user registration and authentication
 app.use('/api/users', require('./routes/UserRoutes')) // For local registration
 app.use('/auth', require('./routes/AuthRoutes')) // For Google OAuth routes
+app.use('/api/auth', require('./routes/ResetRoutes')); // For Resetting User Password
 
 // Custom error handler middleware
 app.use(errorHandler)
