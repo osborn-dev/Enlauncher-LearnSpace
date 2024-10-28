@@ -4,6 +4,7 @@ const dotenv = require('dotenv')
 dotenv.config() // Load environment variables
 const Passport = require('passport') // For Google OAuth setup
 const connectDB = require('./config/db') // MongoDB connection configuration
+// const sDB = require('./config/sdb')  // Sql connection
 const MongoStore = require('connect-mongo') // MongoDB session store for express-session
 const cors = require('cors') // Cross-Origin Resource Sharing
 const session = require('express-session') // Session management
@@ -12,10 +13,11 @@ const colors = require('colors') // For colored console logs
 const { errorHandler } = require('./middleware/errorHandler') // Custom error handler
 
 // Import the User model if needed for Passport deserialization
-const User = require('./models/userModel')
+const User = require('./models/userModel');
 
 // Connect to the database
 connectDB()
+// sDB.execute('SELECT * FROM course')
 
 const app = express()
 
@@ -48,9 +50,10 @@ app.use(Passport.initialize()) // Initialize Passport middleware
 app.use(Passport.session()) // Use Passport's session support
 
 // Endpoints for user registration and authentication
-app.use('/api/users', require('./routes/UserRoutes')) // For local registration
 app.use('/auth', require('./routes/AuthRoutes')) // For Google OAuth routes
 app.use('/api/auth', require('./routes/ResetRoutes')); // For Resetting User Password
+app.use('/api/users', require('./routes/UserRoutes')) // For local registration
+app.use('/api', require('./routes/CourseRoutes'))
 
 // Custom error handler middleware
 app.use(errorHandler)

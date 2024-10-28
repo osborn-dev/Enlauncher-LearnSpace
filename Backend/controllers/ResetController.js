@@ -4,6 +4,7 @@ const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel') 
 const sendPasswordResetEmail = require('../utils/PassRes'); // Importing the function to send password reset emails
 
+// * express validator should be implemented
 // Forgot Password Handler
 const forgotPassword = asyncHandler(async (req, res) => {
     const { email } = req.body; // Extracting the email from the request body
@@ -17,6 +18,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
         const resetToken = crypto.randomBytes(20).toString('hex'); // Generate a random reset token
         user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex'); // Hash the token and store it in the database
         user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // Set token expiration to 10 minutes from now
+        
 
         await user.save(); // Save the user document with the reset token and expiration
 

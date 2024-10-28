@@ -3,11 +3,14 @@ const express = require('express')
 const router = express.Router()
 
 // Import functions from the UserController and protect middleware for route protection
-const { register, login, getMe } = require('../controllers/UserController')
+const { register, login, getMe, registerInstructor } = require('../controllers/UserController')
 const { protect } = require('../middleware/authMiddleware')
 
 // Route for user registration, calls the register function
 router.post('/', register)
+
+// Route for instructor registration, calls the register function
+router.post('/instructor', registerInstructor)
 
 // Route for user login, calls the login function
 router.post('/login', login)

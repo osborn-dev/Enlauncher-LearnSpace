@@ -1,43 +1,49 @@
 // Import necessary modules
-const jwt = require('jsonwebtoken'); // Module for working with JSON Web Tokens
-const asyncHandler = require('express-async-handler'); // Middleware to handle exceptions in async route handlers
-const User = require('../models/userModel'); // Import the User model
+const jwt = require('jsonwebtoken'); // For JWT verification
+const asyncHandler = require('express-async-handler'); // Middleware for async handling
+const User = require('../models/userModel'); // User model
+const Instructor = require('../models/Instructor'); // Instructor model
 
 // Middleware function to protect routes
 const protect = asyncHandler(async (req, res, next) => {
     let token;
 
-    // CHECKING FOR BEARER TOKEN
-    // Check if the authorization header is present and starts with 'Bearer'
+    // Check for the token in the authorization header
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
-            // GETTING TOKEN FROM THE HEADER
-            // Split the authorization header and get the token part (array[1])
-            token = req.headers.authorization.split(' ')[1];
+            token = req.headers.authorization.split(' ')[1]; // Get the token part
 
-            // VERIFYING TOKEN
             // Verify the token using the secret key
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-            // GETTING THE USER FROM (TOKEN)
-            // Find the user by the id encoded in the token, excluding the password field
+            // Get the user from the token
             req.user = await User.findById(decoded.id).select('-password');
 
-            // Ensure the next piece of middleware is called
-            next();
+            next(); // Proceed to the next middleware or route handler
         } catch (error) {
-            console.log(error); // Log the error for debugging
-            res.status(401); // Set the response status to 401 (Unauthorized)
-            throw new Error('Not authorised'); // Throw an error indicating the user is not authorized
+            console.error(error);
+            res.status(401);
+            throw new Error('Not authorized, token failed');
         }
     }
 
-    // If no token is found
     if (!token) {
-        res.status(401); // Set the response status to 401 (Unauthorized)
-        throw new Error('Not authorised'); // Throw an error indicating the user is not authorized
+        res.status(401);
+        throw new Error('Not authorized, no token');
     }
 });
 
-// Export the protect middleware function to be used in other parts of the application
-module.exports = { protect };
+// Middleware function to check if the user is an instructor
+const instructorOnly = asyncHandler(async (req, res, next) => {
+    // Check if the user ID exists in the Instructor model
+    const instructor = await Instructor.findOne({ userId: req.user._id });
+    
+    if (!instructor) {
+        res.status(403); // Forbidden status
+        throw new Error('Access restricted to instructors');
+    }
+
+    next(); // Allow access if user is an instructor
+});
+
+module.exports = { protect, instructorOnly };
