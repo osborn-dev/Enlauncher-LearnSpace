@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+// interest field to be added for user interest to be displayed upon login
 
 const userSchema = mongoose.Schema(
   {

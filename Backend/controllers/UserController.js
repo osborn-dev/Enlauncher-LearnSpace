@@ -89,6 +89,8 @@ const register = asyncHandler(async (req, res) => {
     }
 })
 
+
+// to be accessed from the sign in page 
 // Register a new instructor
 const registerInstructor = asyncHandler(async (req, res) => {
     const { name, email, username, password, expertise } = req.body;
@@ -115,10 +117,10 @@ const registerInstructor = asyncHandler(async (req, res) => {
 
     // Create Instructor profile linked to the User ID
     const instructor = new Instructor({
-        userId: user._id,
         email,
         name,
         expertise,
+        userId: user._id,
     });
     await instructor.save();
 
@@ -149,7 +151,6 @@ const login = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             username: user.username,
-            role: 'instructor',
             token: generateToken(user._id) // Generate JWT token
         });
     } else {

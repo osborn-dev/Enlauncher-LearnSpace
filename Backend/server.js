@@ -21,14 +21,15 @@ connectDB()
 
 const app = express()
 
+app.use(express.json()) // Parse JSON request bodies
+app.use(express.urlencoded({ extended: false })) // Parse URL-encoded request bodies
+
 // Middleware for CORS and body parsing
 app.use(cors({
     origin: 'http://localhost:3000', // Allow requests from this origin
     credentials: true // Allow credentials with CORS
 }))
 
-app.use(express.json()) // Parse JSON request bodies
-app.use(express.urlencoded({ extended: false })) // Parse URL-encoded request bodies
 
 // Initialize express-session with MongoDB session store
 // ! session to be worked on 

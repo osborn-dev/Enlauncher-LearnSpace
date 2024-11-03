@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken'); // For JWT verification
 const asyncHandler = require('express-async-handler'); // Middleware for async handling
 const User = require('../models/userModel'); // User model
 const Instructor = require('../models/Instructor'); // Instructor model
+const Author = require('../models/Author')
 
 // Middleware function to protect routes
 const protect = asyncHandler(async (req, res, next) => {
@@ -46,4 +47,20 @@ const instructorOnly = asyncHandler(async (req, res, next) => {
     next(); // Allow access if user is an instructor
 });
 
-module.exports = { protect, instructorOnly };
+// Middleware function to enable content creation
+const attachAuthorId = asyncHandler(async (req, res, next) => {
+    const { _id: userId } = req.user;
+  
+    // Find the author linked to this user
+    const author = await Author.findOne({ userId });
+  
+    if (!author) {
+      return res.status(404).json({ message: 'Author profile not found for this user.' });
+    }
+  
+    // Attach authorId to the request object
+    req.authorId = author._id;
+    next();
+  });
+
+module.exports = { protect, instructorOnly, attachAuthorId };
