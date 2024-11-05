@@ -12,6 +12,8 @@ const userSchema = mongoose.Schema(
       required: [true, 'Please add an email'],
       unique: true,
     },
+    interestedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
+    interestedContent: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Content' }],
     username: {
       type: String,
       // Custom validation: required if googleId is not present
