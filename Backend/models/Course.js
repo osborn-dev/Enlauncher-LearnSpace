@@ -15,6 +15,10 @@ const courseSchema = new mongoose.Schema({
         ref: 'Instructor', // Reference to the Instructor model
         required: true,
     },
+    sessions: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Session'
+    }],
     createdAt: {
         type: Date,
         default: Date.now, // Automatically set the creation date
