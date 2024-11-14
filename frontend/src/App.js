@@ -1,12 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ProtectedRoute from './utils/ProtectedRoute';
+import Login from './pages/Login';
+import Home from './pages/Home';
 
-function App() {
+const App = () => {
+  const [isAuthenticated] = useState(false);
+
   return (
-    <>
-    <h1>
-      learnspace
-    </h1>
-    </>
+    <Router>
+      <Routes>
+        <Route path='/login' element={<Login />} />
+
+        <Route 
+          path='/' 
+          element={<ProtectedRoute isAuthenticated={isAuthenticated} />}
+        >
+          <Route path='/' element={<Home />} />
+        </Route>  
+
+      </Routes>
+    </Router>
   );
 }
 
