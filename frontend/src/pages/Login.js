@@ -1,12 +1,23 @@
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [email, setEmail] = useState();
+    const [emailError, setEmailError] = useState('');
 
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
+    };
+
+    const handleEmailChange = (e) => {
+        const emailValue = e.target.value;
+        setEmail(emailValue);
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        setEmailError(emailRegex.test(emailValue) ? '' : 'please enter a valid email, e.g., example@domain.com');
     };
 
         return (
@@ -21,9 +32,16 @@ export default function Login() {
                                 type='email'
                                 id='email'
                                 name='email'
-                                className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500'
+                                value={email}
+                                onChange={handleEmailChange}
+                                className={`w-full px-4 py-2 border ${
+                                    emailError ? 'border-red-500' : 'border-gray-300'
+                                  } rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500`}
                                 placeholder='Enter your email'
                             />
+                            {emailError && (
+                                <p className='text-sm text-red-500'>{emailError}</p>
+                            )}
                         </div>
     
                         <div className='space-y-2'>
@@ -82,7 +100,14 @@ export default function Login() {
                             Sign in with Google
                         </button>
                     </form>
+
+                    <p className='mt-6 text-center text-sm text-gray-600'>
+                        Don't have an account?{" "}
+                        <Link to="/signup" className='text-purple-600 hover:underline'>
+                            Sign up
+                        </Link>
+                    </p>
                 </div>
             </div>
-        )
-    }
+        );
+    };
