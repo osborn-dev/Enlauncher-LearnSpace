@@ -34,6 +34,17 @@ export default function Signup() {
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-8">Create an Account</h2>
 
         <form className="space-y-6">
+        <div className="space-y-2">
+            <label htmlFor="fullname" className="block text-sm font-medium text-gray-600">Name</label>
+            <input
+              type="text"
+              id="fullname"
+              name="fullname"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Enter your fullname"
+            />
+          </div>
+
           <div className="space-y-2">
             <label htmlFor="email" className="block text-sm font-medium text-gray-600">Email</label>
             <input
